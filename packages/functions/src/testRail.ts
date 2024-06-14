@@ -1,12 +1,5 @@
-import { JsonProj, Project } from "models/types";
+import { FetchedCases, FetchedSections, JsonProj, Project } from "models/types";
 import { envVariables } from "./variables";
-
-export async function main() {
-  return {
-    statusCode: 200,
-    body: JSON.stringify("Hello World!"),
-  };
-}
 
 export async function getProj() {
   let proj: Project[] = [];
@@ -18,13 +11,15 @@ export async function getProj() {
           "Content-Type": "application/json",
           Authorization:
             "Basic " +
-            btoa(`${envVariables.TESTRAIL_USERNAME}:${envVariables.TESTRAIL_PASSWORD}`),
+            btoa(
+              `${envVariables.TESTRAIL_USERNAME}:${envVariables.TESTRAIL_PASSWORD}`
+            ),
         },
       }
     );
-    
+
     const json = (await response.json()) as JsonProj;
-    
+
     if (response.ok) {
       console.log("Fetch Success");
       //console.log("PROJ DATA: ", json.projects);
@@ -34,11 +29,11 @@ export async function getProj() {
         statusCode: 200,
         body: JSON.stringify(proj),
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       };
     }
-    
+
     if (!response.ok) {
       console.log("Fetch Error 1", response.status);
       return {
@@ -48,7 +43,7 @@ export async function getProj() {
     }
   } catch (error) {
     console.log("Fetch Error 2");
-    console.log(error)
+    console.log(error);
     return {
       statusCode: 500,
       body: JSON.stringify(error),
@@ -97,7 +92,6 @@ export async function editCustomFields(event: {
     } else {
       throw new Error(`Error updating custom fields for ${id2}`);
     }
-
   } catch (error) {
     // return c.json({ "Error ": error }, 500);
   }
@@ -121,7 +115,9 @@ export async function updateCase(event: {
           "Content-Type": "application/json",
           Authorization:
             "Basic " +
-            btoa(`${envVariables.TESTRAIL_USERNAME}:${envVariables.TESTRAIL_PASSWORD}`),
+            btoa(
+              `${envVariables.TESTRAIL_USERNAME}:${envVariables.TESTRAIL_PASSWORD}`
+            ),
         },
       }
     );
@@ -132,9 +128,9 @@ export async function updateCase(event: {
       return {
         statusCode: 200,
         body: JSON.stringify(json),
-        headers :{
-          "Content-Type": "application/json"
-        }
+        headers: {
+          "Content-Type": "application/json",
+        },
       };
     }
 
@@ -142,11 +138,10 @@ export async function updateCase(event: {
       return {
         statusCode: res.status,
         body: {
-          "error": JSON.stringify(json),
-        }
+          error: JSON.stringify(json),
+        },
       };
     }
-    
   } catch (error) {
     return {
       statusCode: 500,
@@ -155,18 +150,200 @@ export async function updateCase(event: {
   }
 }
 
-export async function getCase() {
-  
+export async function getRefs(event: {
+  body: string;
+  headers: { [key: string]: string };
+}) {
+  const { id } = JSON.parse(event.body);
+
+  try {
+    const res = await fetch(
+      `https://trajector.testrail.com/index.php?/api/v2/get_case/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Basic " +
+            Buffer.from(
+              `${envVariables.TESTRAIL_USERNAME}:${envVariables.TESTRAIL_PASSWORD}`
+            ).toString("base64"),
+        },
+      }
+    );
+
+    const json = await res.json();
+
+    if (res.ok) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ json }),
+      };
+    }
+
+    if (!res.ok) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: json }),
+      };
+    }
+  } catch (error) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: `Something went wrong: ${error}` }),
+    };
+  }
 }
 
-export async function getRefs() {
+export async function getList(event: {
+  body: string;
+  headers: { [key: string]: string };
+}) {
+  const { projectId, suiteId, sectionId } = await JSON.parse(event.body);
 
+  try {
+    const res = await fetch(
+      `https://trajector.testrail.com/index.php?/api/v2/get_cases/${projectId}&suite_id=${suiteId}&section_id=${sectionId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Basic" +
+            btoa(
+              `${envVariables.TESTRAIL_USERNAME}:${envVariables.TESTRAIL_PASSWORD}`
+            ),
+        },
+      }
+    );
+
+    const json = await res.json();
+
+    if (res.ok) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify(json),
+      };
+    }
+
+    if (!res.ok) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: json }),
+      };
+    }
+  } catch (error) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: `Something went wrong: ${error}` }),
+    };
+  }
 }
 
-export async function getList() {
+export async function getID(event: {
+  body: string;
+  headers: { [key: string]: string };
+}) {
+  const { project_id } = JSON.parse(event.body);
+  const TESTRAIL_USERNAME = process.env.TESTRAIL_USERNAME;
+  const TESTRAIL_PASSWORD = process.env.TESTRAIL_PASSWORD;
 
-}
+  const df: { suite_id: string; section_id: string }[] = [];
+  let datas: { id: string; name: string; suite_id: string }[];
 
-export async function getID() {
+  try {
+    const response = await fetch(
+      `https://trajector.testrail.com/index.php?/api/v2/get_cases/${project_id}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Basic " +
+            Buffer.from(`${TESTRAIL_USERNAME}:${TESTRAIL_PASSWORD}`).toString(
+              "base64"
+            ),
+        },
+      }
+    );
 
+    const json: FetchedCases = (await response.json()) as FetchedCases;
+
+    if (json.cases) {
+      if (json.cases.length === 0) {
+        return {
+          statusCode: 200,
+          body: JSON.stringify({
+            error: "No Test Cases!",
+          }),
+        };
+      }
+    } else {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          error: "No Test Cases!",
+        }),
+      };
+    }
+
+    df.push(
+      ...json.cases.map(({ suite_id, section_id }) => ({
+        suite_id,
+        section_id,
+      }))
+    );
+  } catch (error) {
+    console.log("ERROR 1", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error1: error,
+      }),
+    };
+  }
+
+  let result_dict: { [suite_id: string]: string[] } = {};
+  for (const { suite_id, section_id } of df) {
+    if (!result_dict[suite_id]) {
+      result_dict[suite_id] = [];
+    }
+    result_dict[suite_id].push(section_id);
+  }
+
+  try {
+    const url = `https://trajector.testrail.com/index.php?/api/v2/get_sections/${project_id}&suite_id=${
+      Object.keys(result_dict)[0]
+    }`;
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "Basic " +
+          Buffer.from(`${TESTRAIL_USERNAME}:${TESTRAIL_PASSWORD}`).toString(
+            "base64"
+          ),
+      },
+    });
+
+    const json: FetchedSections = (await response.json()) as FetchedSections;
+
+    datas = json.sections.map(({ id, name, suite_id }) => ({
+      id,
+      name,
+      suite_id,
+    }));
+  } catch (error) {
+    console.log("ERROR 2", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error2: error,
+      }),
+    };
+  }
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify(datas),
+  };
 }
