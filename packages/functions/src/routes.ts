@@ -9,13 +9,13 @@ export const routes = {
     },
     "POST /api/editCustomFields": {
       function: {
-        handler: "packages/functions/src/testRail.getProj",
+        handler: "packages/functions/src/testRail.editCustomFields",
         environment: envVariables
       },
     },
     "GET /api/updateCase": {
       function: {
-        handler: "packages/functions/src/testRail.getProj",
+        handler: "packages/functions/src/testRail.updateCase",
         environment: envVariables
       },
     },
