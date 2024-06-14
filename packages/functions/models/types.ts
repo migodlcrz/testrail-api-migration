@@ -108,6 +108,10 @@ export interface FetchedIds {
   cases: { suite_id: string; section_id: string }[];
 }
 
+export interface FetchedCases {
+  cases: { suite_id: string; section_id: string }[];
+}
+
 export interface FetchedSections {
   sections: {
     id: string;
