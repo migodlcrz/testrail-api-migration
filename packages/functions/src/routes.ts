@@ -37,4 +37,10 @@ export const routes = {
       environment: envVariables,
     },
   },
+  "POST /api/getSection": {
+    function: {
+      handler: "packages/functions/src/testRail.getSection",
+      environment: envVariables,
+    },
+  },
 };

@@ -93,7 +93,10 @@ export async function editCustomFields(event: {
       throw new Error(`Error updating custom fields for ${id2}`);
     }
   } catch (error) {
-    // return c.json({ "Error ": error }, 500);
+    return {
+      statusCode: 500,
+      body: JSON.stringify(error),
+    };
   }
 }
 
@@ -177,7 +180,10 @@ export async function getRefs(event: {
     if (res.ok) {
       return {
         statusCode: 200,
-        body: JSON.stringify({ json }),
+        body: JSON.stringify(json),
+        headers: {
+          "Content-Type": "application/json",
+        }
       };
     }
 
@@ -228,7 +234,10 @@ export async function getList(event: {
     if (!res.ok) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: json }),
+        body: JSON.stringify(json),
+        headers: {
+          "Content-Type": "application/json",
+        }
       };
     }
   } catch (error) {
@@ -291,6 +300,7 @@ export async function getID(event: {
         section_id,
       }))
     );
+
   } catch (error) {
     console.log("ERROR 1", error);
     return {
@@ -345,5 +355,54 @@ export async function getID(event: {
   return {
     statusCode: 200,
     body: JSON.stringify(datas),
+    headers:{
+      "Content-Type": "application/json"
+    }
   };
 }
+
+export async function getSection(event: {
+  body: string;
+  headers: { [key: string]: string };
+}) {
+  const { section_Id } = JSON.parse(event.body);
+  try {
+    const res = await fetch(
+      `https://trajector.testrail.com/index.php?/api/v2/get_section/${section_Id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Basic " + btoa(`${envVariables.TESTRAIL_USERNAME}:${envVariables.TESTRAIL_PASSWORD}`)
+        }
+      }
+    );
+
+    const json = await res.json();
+
+    if (res.ok) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify(json),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      };
+    }
+
+    if (!res.ok) {
+      console.log("/getSection Error", json);
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: json })
+      };
+    }
+
+  } catch (error) {
+    console.log("/getSection Error", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error })
+    };
+  }
+};
