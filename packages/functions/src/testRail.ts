@@ -213,11 +213,7 @@ export async function getList(event: {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization:
-            "Basic" +
-            btoa(
-              `${envVariables.TESTRAIL_USERNAME}:${envVariables.TESTRAIL_PASSWORD}`
-            ),
+          Authorization: "Basic " + btoa(`${envVariables.TESTRAIL_USERNAME}:${envVariables.TESTRAIL_PASSWORD}`)
         },
       }
     );
@@ -228,6 +224,9 @@ export async function getList(event: {
       return {
         statusCode: 200,
         body: JSON.stringify(json),
+        headers: {
+          "Content-Type": "application/json",
+        }
       };
     }
 
