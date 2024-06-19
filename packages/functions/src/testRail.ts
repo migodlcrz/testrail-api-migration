@@ -130,7 +130,7 @@ export async function updateCase(event: {
     if (res.ok) {
       return {
         statusCode: 200,
-        body: JSON.stringify(json),
+        body: JSON.stringify({json}),
         headers: {
           "Content-Type": "application/json",
         },
@@ -180,7 +180,7 @@ export async function getRefs(event: {
     if (res.ok) {
       return {
         statusCode: 200,
-        body: JSON.stringify(json),
+        body: JSON.stringify({json}),
         headers: {
           "Content-Type": "application/json",
         }
