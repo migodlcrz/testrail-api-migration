@@ -27,7 +27,7 @@ export async function getProj() {
 
       return {
         statusCode: 200,
-        body: JSON.stringify(proj),
+        body: JSON.stringify({Projects: proj}),
         headers: {
           "Content-Type": "application/json",
         },
@@ -223,7 +223,7 @@ export async function getList(event: {
     if (res.ok) {
       return {
         statusCode: 200,
-        body: JSON.stringify(json),
+        body: JSON.stringify({json}),
         headers: {
           "Content-Type": "application/json",
         }
@@ -382,7 +382,7 @@ export async function getSection(event: {
     if (res.ok) {
       return {
         statusCode: 200,
-        body: JSON.stringify(json),
+        body: JSON.stringify({json}),
         headers: {
           "Content-Type": "application/json"
         }
