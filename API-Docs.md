@@ -27,8 +27,7 @@ This request gets the lists of projects on the testrail website.
                 headers: {
                 "Content-Type": "application/json",
                 Authorization:
-                    "Basic " + btoa(`${TESTRAIL_USERNAME}:
-                    ${TESTRAIL_PASSWORD}`),
+                    "Basic " + btoa(`${TESTRAIL_USERNAME}:${TESTRAIL_PASSWORD}`),
                 },
             }
         )
@@ -178,12 +177,12 @@ Gets all test cases within a section
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: "Basic " + btoa(`${TESTRAIL_USERNAME}:${TESTRAIL_PASSWORD}`)
           },
           body: JSON.stringify({
             projectId,
             suiteId,
             sectionId,
-            associatedtestcases,
           }),
         });
     ```
@@ -199,7 +198,7 @@ Retrieves all the sections from a project in TestRail
 * **Request Body Example** 
     ```json
     {
-        "projectId": 32,
+        "project_id": 32,
     }
 * **Success Response**
 
