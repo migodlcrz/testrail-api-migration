@@ -158,9 +158,10 @@ Gets all test cases within a section
 * **Request Body Example** 
     ```json
     {
-        "projectId":,
-        "suiteId":,
-        "sectionId": ,
+        "projectId": 32,
+        "suiteId": 445 ,
+        "sectionId": 4426,
+        "associatedtestcases": ""
     }
 * **Success Response**
 
@@ -198,7 +199,7 @@ Retrieves all the sections from a project in TestRail
 * **Request Body Example** 
     ```json
     {
-        "projectId": 1,
+        "projectId": 32,
     }
 * **Success Response**
 
@@ -242,10 +243,10 @@ refs: string that will hold the AHA! Feature ID'S seperated by commas that will 
     `/api/updateCase`
 
 * **Request Body Example** 
-    ```typescript
+    ```json
     {
-        "id": Number,
-        "refs": String
+        "id": "30726",
+        "refs": ""
     }
     ```
 
