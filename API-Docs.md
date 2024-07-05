@@ -45,7 +45,7 @@ This request gets the lists of projects on the testrail website.
 * **Request Body**
     ```json
         {
-            "id": 30726
+            "id": Number
         }
     ````
 
@@ -107,7 +107,7 @@ This request gets the lists of projects on the testrail website.
     ```
 
 # **getSection**
-Gets the section details from testrail
+Gets the section details from TestRail
 * **METHOD**
     `POST`
 
@@ -147,7 +147,7 @@ Gets the section details from testrail
     ```
 
 # **getList**
-Gets all test cases within a section 
+Gets all test cases within a section in TestRail
 * **METHOD**
     `POST`
 
@@ -157,10 +157,10 @@ Gets all test cases within a section
 * **Request Body Example** 
     ```json
     {
-        "projectId": 32,
-        "suiteId": 445 ,
-        "sectionId": 4426,
-        "associatedtestcases": ""
+        "projectId": Number,
+        "suiteId": Number,
+        "sectionId": Number,
+        "associatedtestcases": "[]"
     }
 * **Success Response**
 
@@ -198,7 +198,7 @@ Retrieves all the sections from a project in TestRail
 * **Request Body Example** 
     ```json
     {
-        "project_id": 32,
+        "project_id": Number,
     }
 * **Success Response**
 
@@ -208,9 +208,9 @@ Retrieves all the sections from a project in TestRail
     ```json
         [
             {
-                "id": 4357,
-                "name": "Message History Connection - Email",
-                "suite_id": 445
+                "id": Number,
+                "name": "String",
+                "suite_id": Number
             }
         ],
     ```
@@ -224,16 +224,13 @@ Retrieves all the sections from a project in TestRail
           },
           body: JSON.stringify({
             projectId,
-            suiteId,
-            sectionId,
-            associatedtestcases,
           }),
         });
     ```
 
 # **updateCase**
 Updates the TestRail Test Case by It's ID. Reference Field will be populated by what is contained in the Refs field
-refs: string that will hold the AHA! Feature ID'S seperated by commas that will populate the reference field in TestRail 
+refs: string that will hold the AHA! Feature Id's seperated by commas that will populate the reference field in TestRail 
 * **METHOD**
     `POST`
 
@@ -244,8 +241,8 @@ refs: string that will hold the AHA! Feature ID'S seperated by commas that will 
 * **Request Body Example** 
     ```json
     {
-        "id": "30726",
-        "refs": ""
+        "id": "string",
+        "refs": "string"
     }
     ```
 
@@ -255,7 +252,7 @@ refs: string that will hold the AHA! Feature ID'S seperated by commas that will 
 
     * **Content** 
     ```json
-        {"message": "Case updated Successfully"} //Todo
+        {"message": "Case updated Successfully"}
     ```
 
 * **Sample Call** 
@@ -281,7 +278,7 @@ Edits the custom field in AHA according to the given feature ID
 * **Request Body Example** 
     ```json
         {
-            "id2": "DPACAD-243",
+            "id2": "string",
             "associated_test_cases": "[]"
         }
     ```
@@ -294,7 +291,7 @@ Edits the custom field in AHA according to the given feature ID
 
     * **Content** 
     ```json
-        {"message": "Custom fields updated successfully"} //Todo
+        {"message": "Custom fields updated successfully"}
     ```
 
 * **Sample Call** 
@@ -305,11 +302,11 @@ Edits the custom field in AHA according to the given feature ID
           "Content-Type": "application/json",
           Authorization: `Bearer ${link.AHA_GET_FEATURE_APIKEY}`,
         },
-        body: JSON.stringify({ id2, associated_test_cases: featString }),
+        body: JSON.stringify({ id2, associated_test_cases }),
       });
     ```
 
-    *Note: There is an inconsistency within the naming scheme of the Id's being id and id2. Those fields use the same required id from an AHA Feature. e.g DPACAD-000*
+    *Note: There is an inconsistency within the naming scheme of the Id's being id and id2. Those fields use the same required id from an AHA Feature.*
 
 
 
